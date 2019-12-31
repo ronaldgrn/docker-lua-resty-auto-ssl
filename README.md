@@ -1,3 +1,4 @@
+Generate fallback keys
 ```
 openssl req -new -newkey rsa:2048 -days 3650 -nodes -x509 \
     -subj '/CN=auto-ssl-fallback' \
@@ -5,22 +6,21 @@ openssl req -new -newkey rsa:2048 -days 3650 -nodes -x509 \
     -out ssl/resty-auto-ssl-fallback.crt
 ```
 
-To Deploy
+Deploy
 ```
-docker build -t openresty .
-docker run -it --rm \
+docker run -it \
     -p 80:80 \
     -p 443:443 \
     --restart always \
     --env DNS_DOMAIN=target.cname.xyz \
     --env PROXY_PASS=http://127.0.0.1:80 \
-    openresty bash
-/usr/local/openresty/bin/openresty
+    ronaldgrn/docker-lua-resty-auto-ssl:0.0.1
 ```
 
 Update `DNS_DOMAIN` and `PROXY_PASS` as necessary
 
 
+=== DEBUG ===
 
 To debug nginx
 ```

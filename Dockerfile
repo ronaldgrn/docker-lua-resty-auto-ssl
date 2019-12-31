@@ -4,7 +4,6 @@ RUN mkdir /etc/resty-auto-ssl
 RUN chown www-data /etc/resty-auto-ssl
 
 RUN /usr/local/openresty/luajit/bin/luarocks install lua-resty-auto-ssl
-# RUN /usr/local/openresty/luajit/bin/luarocks install lua-resty-dns
 
 COPY nginx.conf /usr/local/openresty/nginx/conf/nginx.conf
 COPY ssl/resty-auto-ssl-fallback.key /etc/ssl/resty-auto-ssl-fallback.key

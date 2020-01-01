@@ -30,7 +30,21 @@ openssl req -new -newkey rsa:2048 -days 3650 -nodes -x509 \
     -out ssl/resty-auto-ssl-fallback.crt
 ```
 
-Deploy
+Deploy with redis storage
+```
+docker run -it \
+    -p 80:80 \
+    -p 443:443 \
+    --restart always \
+    --env DNS_DOMAIN=target.cname.xyz \
+    --env PROXY_PASS=http://127.0.0.1:80 \
+    --env STORAGE_ADAPTER=redis \
+    --env REDIS_HOST=127.0.0.1 \
+    --env REDIS_PORT=6379 \
+    ronaldgrn/docker-lua-resty-auto-ssl:0.0.1
+```
+
+Deploy with file storage (not recommended)
 ```
 docker run -it \
     -p 80:80 \
@@ -41,14 +55,18 @@ docker run -it \
     ronaldgrn/docker-lua-resty-auto-ssl:0.0.1
 ```
 
-Update `DNS_DOMAIN` and `PROXY_PASS` as necessary.
+`DNS_DOMAIN` - Valid cname pointing to the node this is deployed on.
 
-`DNS_DOMAIN` - valid cname pointing to the node this is deployed on.
+`PROXY_PASS` - Address we will be proxying. Ideally should be an internal ip. protocol is required.
 
-`PROXY_PASS` - address we will be proxying. Ideally should be an internal ip. protocol is required.
+`STORAGE_ADAPTER` - One of `redis` or `file`. Defaults to `file`.
+
+`REDIS_HOST` - If using the redis adapter; the redis hostname or ip.
+
+`REDIS_PORT` - If using the redis adapter; the redis port. Defaults to 6379
 
 
-=== DEV ===
+## Development
 Say we want to proxy a local Django server, then, in the Django project
 
 ```

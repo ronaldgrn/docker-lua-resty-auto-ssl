@@ -1,4 +1,4 @@
-# Docker lua-resty-auto-ssl
+# docker lua-resty-auto-ssl
 
 Docker wrapper around the reliable **[lua-resty-auto-ssl](https://github.com/GUI/lua-resty-auto-ssl)** library with multi-tenant and redis support.
 
@@ -22,13 +22,6 @@ generate ssl?: false
 
 
 ## Deploy Instructions
-Generate fallback cert or place your own valid ssl cert in the ssl dir.
-```
-openssl req -new -newkey rsa:2048 -days 3650 -nodes -x509 \
-    -subj '/CN=auto-ssl-fallback' \
-    -keyout ssl/resty-auto-ssl-fallback.key \
-    -out ssl/resty-auto-ssl-fallback.crt
-```
 
 Deploy with redis storage
 ```
@@ -41,7 +34,7 @@ docker run -it \
     --env STORAGE_ADAPTER=redis \
     --env REDIS_HOST=127.0.0.1 \
     --env REDIS_PORT=6379 \
-    ronaldgrn/docker-lua-resty-auto-ssl:0.0.1
+    ronaldgrn/docker-lua-resty-auto-ssl:1.0.0
 ```
 
 Deploy with file storage (not recommended)
@@ -52,8 +45,37 @@ docker run -it \
     --restart always \
     --env DNS_DOMAIN=target.cname.xyz \
     --env PROXY_PASS=http://127.0.0.1:80 \
-    ronaldgrn/docker-lua-resty-auto-ssl:0.0.1
+    ronaldgrn/docker-lua-resty-auto-ssl:1.0.0
 ```
+
+**Protip**: All builds from dockerhub will inevitably have a pre-configured fallback ssl certificate. This is required to start nginx. It is strongly recommended to mount your own certs in production.
+
+eg. To generate and mount a unique cert on your docker machine.
+```
+mkdir /etc/ssl
+```
+```
+openssl req -new -newkey rsa:2048 -days 3650 -nodes -x509 \
+    -subj '/CN=auto-ssl-fallback' \
+    -keyout /etc/ssl/resty-auto-ssl-fallback.key \
+    -out /etc/ssl/resty-auto-ssl-fallback.crt
+```
+```
+docker run -it \
+    -p 80:80 \
+    -p 443:443 \
+    --restart always \
+    --env DNS_DOMAIN=target.cname.xyz \
+    --env PROXY_PASS=http://127.0.0.1:80 \
+    --env STORAGE_ADAPTER=redis \
+    --env REDIS_HOST=127.0.0.1 \
+    --env REDIS_PORT=6379 \
+    --mount type=bind,source=/etc/ssl/resty-auto-ssl-fallback.key,target=/etc/ssl/resty-auto-ssl-fallback.key,readonly \
+    --mount type=bind,source=/etc/ssl/resty-auto-ssl-fallback.crt,target=/etc/ssl/resty-auto-ssl-fallback.crt,readonly \
+    ronaldgrn/docker-lua-resty-auto-ssl:1.0.0
+```
+
+## Environment Variables
 
 `DNS_DOMAIN` - Valid cname pointing to the node this is deployed on.
 
@@ -66,14 +88,22 @@ docker run -it \
 `REDIS_PORT` - If using the redis adapter; the redis port. Defaults to 6379
 
 
-## Development
+## Advanced
 Say we want to proxy a local Django server, then, in the Django project
 
 ```
 ./manage.py runserver 0.0.0.0:8000
 ```
 
-In this project
+In this project, generate a fallback cert or place your own valid ssl cert in the ssl dir.
+```
+openssl req -new -newkey rsa:2048 -days 3650 -nodes -x509 \
+    -subj '/CN=auto-ssl-fallback' \
+    -keyout ssl/resty-auto-ssl-fallback.key \
+    -out ssl/resty-auto-ssl-fallback.crt
+```
+
+then build and run.
 ```
 docker build -t openresty .
 docker run -it --rm \

@@ -70,6 +70,7 @@ docker run -it \
     --env STORAGE_ADAPTER=redis \
     --env REDIS_HOST=127.0.0.1 \
     --env REDIS_PORT=6379 \
+    --env REDIS_DB=0 \
     --mount type=bind,source=/etc/ssl/resty-auto-ssl-fallback.key,target=/etc/ssl/resty-auto-ssl-fallback.key,readonly \
     --mount type=bind,source=/etc/ssl/resty-auto-ssl-fallback.crt,target=/etc/ssl/resty-auto-ssl-fallback.crt,readonly \
     ronaldgrn/docker-lua-resty-auto-ssl:1.0.0
@@ -86,6 +87,8 @@ docker run -it \
 `REDIS_HOST` - If using the redis adapter; the redis hostname or ip.
 
 `REDIS_PORT` - If using the redis adapter; the redis port. Defaults to 6379
+
+`REDIS_DB` - If using the redis adapter; the redis db. Defaults to 0
 
 
 ## Advanced

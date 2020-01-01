@@ -25,10 +25,15 @@ if [ "${STORAGE_ADAPTER}" == "redis" ]; then
     echo "Warn: Using default REDIS_PORT [6379]"
     REDIS_PORT="6379"
   fi
+
+  if [[ -z "${REDIS_DB}" ]]; then
+    REDIS_DB="0"
+  fi
 else
   # We need values anyways for the syntax to be valid
   REDIS_HOST="127.0.0.1"
   REDIS_PORT="6379"
+  REDIS_DB="0"
 fi
 
 # replace with parameter expansion for slashes
@@ -37,6 +42,7 @@ sed -i -e "s/{{ PROXY_PASS }}/${PROXY_PASS//\//\\/}/g" /usr/local/openresty/ngin
 sed -i -e "s/{{ STORAGE_ADAPTER }}/${STORAGE_ADAPTER}/g" /usr/local/openresty/nginx/conf/nginx.conf
 sed -i -e "s/{{ REDIS_HOST }}/${REDIS_HOST//\//\\/}/g" /usr/local/openresty/nginx/conf/nginx.conf
 sed -i -e "s/{{ REDIS_PORT }}/${REDIS_PORT}/g" /usr/local/openresty/nginx/conf/nginx.conf
+sed -i -e "s/{{ REDIS_DB }}/${REDIS_DB}/g" /usr/local/openresty/nginx/conf/nginx.conf
 
 echo "SETUP OK"
 exit 0

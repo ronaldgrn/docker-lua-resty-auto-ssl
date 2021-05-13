@@ -34,7 +34,7 @@ docker run -it \
     --env STORAGE_ADAPTER=redis \
     --env REDIS_HOST=127.0.0.1 \
     --env REDIS_PORT=6379 \
-    ronaldgrn/docker-lua-resty-auto-ssl:1.0.0
+    ronaldgrn/docker-lua-resty-auto-ssl:1.3.0
 ```
 
 Deploy with file storage (not recommended)
@@ -45,7 +45,7 @@ docker run -it \
     --restart always \
     --env DNS_DOMAIN=target.cname.xyz \
     --env PROXY_PASS=http://127.0.0.1:80 \
-    ronaldgrn/docker-lua-resty-auto-ssl:1.0.0
+    ronaldgrn/docker-lua-resty-auto-ssl:1.3.0
 ```
 
 **Protip**: All builds from dockerhub will inevitably have a pre-configured fallback ssl certificate. This is required to start nginx. It is strongly recommended to mount your own certs in production.
@@ -72,7 +72,7 @@ docker run -it \
     --env REDIS_PORT=6379 \
     --mount type=bind,source=/etc/ssl/resty-auto-ssl-fallback.key,target=/etc/ssl/resty-auto-ssl-fallback.key,readonly \
     --mount type=bind,source=/etc/ssl/resty-auto-ssl-fallback.crt,target=/etc/ssl/resty-auto-ssl-fallback.crt,readonly \
-    ronaldgrn/docker-lua-resty-auto-ssl:1.0.0
+    ronaldgrn/docker-lua-resty-auto-ssl:1.3.0
 ```
 
 ## Environment Variables

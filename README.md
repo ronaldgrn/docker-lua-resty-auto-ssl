@@ -87,6 +87,8 @@ docker run -it \
 
 `REDIS_PORT` - If using the redis adapter; the redis port. Defaults to 6379
 
+`RESOLVER` - Nginx resolver. Useful for cases where we need to connect by hostname to a local redis server. Defaults to 8.8.8.8
+
 
 ## Advanced
 Say we want to proxy a local Django server, then, in the Django project

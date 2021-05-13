@@ -105,13 +105,13 @@ openssl req -new -newkey rsa:2048 -days 3650 -nodes -x509 \
 
 then build and run.
 ```
-docker build -t openresty .
+docker build -t openresty-ssl .
 docker run -it --rm \
     -p 80:80 \
     -p 443:443 \
     --env DNS_DOMAIN=nf.syscloak.com \
     --env PROXY_PASS=http://172.17.0.1:8000 \
-    openresty
+    openresty-ssl
 ```
 
 

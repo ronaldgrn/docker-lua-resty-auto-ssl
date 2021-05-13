@@ -1,4 +1,4 @@
-FROM openresty/openresty:1.15.8.3-2-bionic
+FROM openresty/openresty:1.19.3.1-8-bionic
 
 RUN mkdir /etc/resty-auto-ssl
 RUN chown www-data /etc/resty-auto-ssl
